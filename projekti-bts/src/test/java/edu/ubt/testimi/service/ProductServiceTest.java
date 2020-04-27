@@ -7,6 +7,8 @@ import edu.ubt.testimi.repository.ProductRepository;
 import edu.ubt.testimi.repository.ShportaProductRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -15,7 +17,9 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -54,11 +58,13 @@ class ProductServiceTest {
         assertEquals(product.getEmri(), productService.create(productDTO).getEmri());
         assertEquals(product.getSasia(), productService.create(productDTO).getSasia());
         assertEquals(product.getCmimi(), productService.create(productDTO).getCmimi());
+
     }
 
     @Test
     void update() {
         ProductViewDTO productDTO = new ProductViewDTO();
+        productDTO.setId(1l);
         productDTO.setEmri("Laptop Dell G5");
         productDTO.setSasia(10);
         productDTO.setCmimi(1499.99);
@@ -66,54 +72,25 @@ class ProductServiceTest {
         productDTO.setKodi("ASFJOIJASF124");
         productDTO.setPershkrimi("Laptopi me i mire gaming per vitin 2019");
 
-        Product mockProduct = new Product();
-        mockProduct.setId(1l);
-        mockProduct.setEmri("Lenovo Dell G5");
-        mockProduct.setSasia(2);
-        mockProduct.setCmimi(1499.99);
-        mockProduct.setFoto("https://cnet2.cbsistatic.com/img/rxN4Y_QwzChtDn829w_yq0w1SQg=/470x376/2019/06/22/37a6865e-001d-4598-9d89-8e96473a644c/10-dell-g5-15.jpg");
-        mockProduct.setKodi("ASFJOIJASF124");
-        mockProduct.setPershkrimi("Laptopi me i mire gaming per vitin 2019");
+        Product product = new Product();
+        product.setId(productDTO.getId());
+        product.setEmri(productDTO.getEmri());
+        product.setKodi(productDTO.getKodi());
+        product.setPershkrimi(productDTO.getPershkrimi());
+        product.setSasia(productDTO.getSasia());
+        product.setCmimi(productDTO.getCmimi());
+        product.setFoto(productDTO.getFoto());
 
-
-        mockProduct.setEmri(productDTO.getEmri());
-        mockProduct.setKodi(productDTO.getKodi());
-        mockProduct.setPershkrimi(productDTO.getPershkrimi());
-        mockProduct.setSasia(productDTO.getSasia());
-        mockProduct.setCmimi(productDTO.getCmimi());
-        mockProduct.setFoto(productDTO.getFoto());
-
-        when(productRepository.getOne(1l)).thenReturn(mockProduct);
-        when(productRepository.save(mockProduct)).thenReturn(mockProduct);
-        assertEquals(mockProduct.getEmri(), productService.update(productDTO).getEmri());
+        when(productRepository.getOne(product.getId())).thenReturn(product);
+        when(productRepository.save(product)).thenReturn(product);
+        assertEquals(product.getEmri(), productService.update(productDTO).getEmri());
+        assertEquals(product.getSasia(), productService.update(productDTO).getSasia());
+        assertEquals(product.getCmimi(), productService.update(productDTO).getCmimi());
     }
 
     @Test
     void getAll() {
         List<Product> products = getProductsList();
-        List<ProductViewDTO> productViewDTOS = new ArrayList<>();
-
-        for (Product product : products){
-            ProductViewDTO productViewDTO = new ProductViewDTO();
-
-            Boolean checkShportaProductExists = shportaProductRepository.existsByProduct(product);
-
-            productViewDTO.setId(product.getId());
-            productViewDTO.setEmri(product.getEmri());
-            productViewDTO.setKodi(product.getKodi());
-            productViewDTO.setPershkrimi(product.getPershkrimi());
-            productViewDTO.setCmimi(product.getCmimi());
-            productViewDTO.setSasia(product.getSasia());
-            productViewDTO.setFoto(product.getFoto());
-            if (checkShportaProductExists){
-                productViewDTO.setEshteNeStok(true);
-            }else {
-                productViewDTO.setEshteNeStok(false);
-            }
-
-            productViewDTOS.add(productViewDTO);
-        }
-
         when(productRepository.findAll()).thenReturn(products);
         assertEquals(2,productService.getAll().size());
     }
@@ -127,6 +104,7 @@ class ProductServiceTest {
         product.setKodi("ASFASF9849");
         product.setPershkrimi("15-inch gaming laptop engineered with dynamic Game Shift technology, NVIDIA® GeForce® discrete graphics, and up to 9th Gen Intel® i7 processors.");
         product.setSasia(0);
+
         when(productRepository.getOne(1l)).thenReturn(product);
 
         assertEquals(product.getId(), productService.getOne(1L).getId());

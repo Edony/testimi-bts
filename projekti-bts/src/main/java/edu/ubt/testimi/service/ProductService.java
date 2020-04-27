@@ -8,6 +8,7 @@ import edu.ubt.testimi.repository.ShportaProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.criteria.CriteriaBuilder;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,12 +24,16 @@ public class ProductService {
 
     public Product create(ProductDTO productDTO){
         Product result = null;
+        Integer sasia = productDTO.getSasia();
+        if (sasia <= 0){
+            sasia = 1;
+        }
         try {
             Product product = new Product();
             product.setEmri(productDTO.getEmri());
             product.setKodi(productDTO.getKodi());
             product.setPershkrimi(productDTO.getPershkrimi());
-            product.setSasia(productDTO.getSasia());
+            product.setSasia(sasia);
             product.setCmimi(productDTO.getCmimi());
             product.setFoto(productDTO.getFoto());
             productRepository.save(product);
@@ -43,12 +48,16 @@ public class ProductService {
 
     public Product update(ProductViewDTO productViewDTO){
         Product result = null;
+        Integer sasia = productViewDTO.getSasia();
+        if (sasia < 0){
+            sasia = 1;
+        }
         try {
             Product product = productRepository.getOne(productViewDTO.getId());
             product.setEmri(productViewDTO.getEmri());
             product.setKodi(productViewDTO.getKodi());
             product.setPershkrimi(productViewDTO.getPershkrimi());
-            product.setSasia(productViewDTO.getSasia());
+            product.setSasia(sasia);
             product.setCmimi(productViewDTO.getCmimi());
             product.setFoto(productViewDTO.getFoto());
 

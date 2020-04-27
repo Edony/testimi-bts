@@ -1,5 +1,6 @@
 package edu.ubt.testimi.service;
 
+import edu.ubt.testimi.data.ShportaProductDTO;
 import edu.ubt.testimi.data.ShportaProductViewDTO;
 import edu.ubt.testimi.entity.Product;
 import edu.ubt.testimi.entity.ShportaProduct;
@@ -34,63 +35,79 @@ class ShportaProductServiceTest {
 
     @Test
     void create() {
+        ShportaProductDTO shportaProductDTO = new ShportaProductDTO();
+        shportaProductDTO.setProduct_id(1l);
+        shportaProductDTO.setSasia(5);
 
+        ShportaProduct shportaProduct = getShportaProductsMock().get(0);
+
+        Product product1 = new Product();
+        product1.setId(1l);
+        product1.setEmri("Test Product 1");
+        product1.setSasia(10);
+        product1.setCmimi(50.00);
+        product1.setFoto("https://cnet2.cbsistatic.com/img/rxN4Y_QwzChtDn829w_yq0w1SQg=/470x376/2019/06/22/37a6865e-001d-4598-9d89-8e96473a644c/10-dell-g5-15.jpg");
+        product1.setKodi("ASFJOIJASF124");
+        product1.setPershkrimi("Test me i mire gaming per vitin 2019");
+
+
+        when(productRepository.getOne(shportaProductDTO.getProduct_id())).thenReturn(product1);
+        when(shportaProductRepository.save(shportaProduct)).thenReturn(shportaProduct);
+        assertEquals(true,shportaProductService.create(shportaProductDTO));
     }
 
     @Test
     void getAll() {
         List<ShportaProduct> shportaProducts = getShportaProductsMock();
-        List<ShportaProductViewDTO> shportaProductViewDTOS = null;
-
-            shportaProductViewDTOS = new ArrayList<>();
-
-            for (ShportaProduct shportaProduct : shportaProducts){
-                ShportaProductViewDTO shportaProductViewDTO = new ShportaProductViewDTO();
-
-                shportaProductViewDTO.setId(shportaProduct.getId());
-                shportaProductViewDTO.setCmimiTotal(shportaProduct.getCmimiTotal());
-                shportaProductViewDTO.setSasia(shportaProduct.getSasia());
-                shportaProductViewDTO.setProduct(shportaProduct.getProduct());
-
-                shportaProductViewDTOS.add(shportaProductViewDTO);
-            }
-
         when(shportaProductRepository.findAll()).thenReturn(shportaProducts);
         assertEquals(2,shportaProductService.getAll().size());
     }
 
     @Test
     void shtoSasi() {
-        int sasia = 2;
-        ShportaProduct shportaProductMock = getShportaProductsMock().get(0);
+        ShportaProduct shportaProduct = getShportaProductsMock().get(0);
 
-        Product product = new Product();
-        product.setId(1l);
-        product.setEmri("Test Product 1");
-        product.setSasia(10);
-        product.setCmimi(50.00);
-        product.setFoto("https://cnet2.cbsistatic.com/img/rxN4Y_QwzChtDn829w_yq0w1SQg=/470x376/2019/06/22/37a6865e-001d-4598-9d89-8e96473a644c/10-dell-g5-15.jpg");
-        product.setKodi("ASFJOIJASF124");
-        product.setPershkrimi("Test me i mire gaming per vitin 2019");
+        Product product = shportaProduct.getProduct();
 
-        if(sasia > product.getSasia() + shportaProductMock.getSasia()){
-            shportaProductMock.setSasia(product.getSasia() + shportaProductMock.getSasia());
-            shportaProductMock.setCmimiTotal((product.getCmimi() * shportaProductMock.getSasia()));
-            product.setSasia(0);
-        }else {
-            product.setSasia(product.getSasia() + shportaProductMock.getSasia() - sasia);
-            shportaProductMock.setSasia(sasia);
-            shportaProductMock.setCmimiTotal(Math.round((product.getCmimi() * sasia) * 100.0) / 100.0);
-        }
+        when(shportaProductRepository.getOne(1l)).thenReturn(shportaProduct);
+        when(productRepository.getOne(shportaProduct.getProduct().getId())).thenReturn(product);
 
-        when(productRepository.getOne(shportaProductMock.getProduct().getId())).thenReturn(product);
-        when(shportaProductRepository.save(shportaProductMock)).thenReturn(shportaProductMock);
-        when(productRepository.save(product)).thenReturn(product);
-        assertEquals(true,shportaProductService.shtoSasi(shportaProductMock.getId(),sasia));
+        assertEquals(true,shportaProductService.shtoSasi(1l,2));
+    }
+
+    @Test
+    void shtoSasi_sasiaMaEMadheSeStoku() {
+        ShportaProduct shportaProduct = getShportaProductsMock().get(0);
+
+        Product product = shportaProduct.getProduct();
+
+        when(shportaProductRepository.getOne(1l)).thenReturn(shportaProduct);
+        when(productRepository.getOne(shportaProduct.getProduct().getId())).thenReturn(product);
+
+        assertEquals(true,shportaProductService.shtoSasi(1l,500));
+    }
+
+    @Test
+    void shtoSasi_sasiaMinus() {
+        ShportaProduct shportaProduct = getShportaProductsMock().get(0);
+
+        Product product = shportaProduct.getProduct();
+
+        when(shportaProductRepository.getOne(1l)).thenReturn(shportaProduct);
+        when(productRepository.getOne(shportaProduct.getProduct().getId())).thenReturn(product);
+
+        assertEquals(true,shportaProductService.shtoSasi(1l,-10));
     }
 
     @Test
     void delete() {
+        ShportaProduct shportaProduct = getShportaProductsMock().get(1);
+        Product product = shportaProduct.getProduct();
+
+        when(shportaProductRepository.getOne(1l)).thenReturn(shportaProduct);
+        when(productRepository.getOne(shportaProduct.getProduct().getId())).thenReturn(product);
+
+        assertEquals(true, shportaProductService.delete(1l));
     }
 
     private List<ShportaProduct> getShportaProductsMock(){

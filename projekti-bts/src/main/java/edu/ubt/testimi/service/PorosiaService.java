@@ -2,7 +2,6 @@ package edu.ubt.testimi.service;
 
 import edu.ubt.testimi.data.*;
 import edu.ubt.testimi.entity.Porosia;
-import edu.ubt.testimi.entity.Product;
 import edu.ubt.testimi.entity.ShportaProduct;
 import edu.ubt.testimi.entity.ShportaProductPorosia;
 import edu.ubt.testimi.entity.type.PorosiaStatus;
@@ -11,6 +10,7 @@ import edu.ubt.testimi.repository.ShportaProductPorosiaRepository;
 import edu.ubt.testimi.repository.ShportaProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -48,7 +48,6 @@ public class PorosiaService {
 
             Porosia newPorosia = porosiaRepository.save(porosia);
             Long newPorosiaID = newPorosia.getId();
-            System.err.println("NEW ID: " + newPorosiaID);
             Double cmimiTotalIPorosise = 0.0;
 
             List<ShportaProduct> shportaProducts = shportaProductRepository.findAll();
@@ -94,8 +93,8 @@ public class PorosiaService {
                 porosiaListViewDTO.setData(porosia.getData());
                 porosiaListViewDTO.setStatus(porosia.getStatus());
                 porosiaListViewDTO.setSasia(shportaProductPorosiaRepository.countByPorosiaId(porosia.getId()));
-                porosiaListViewDTO.setCmimiTotal(Math.round(porosia.getCmimiTotal() * 100.0) / 100.0);
-
+//                porosiaListViewDTO.setCmimiTotal(Math.round(porosia.getCmimiTotal() * 100.0) / 100.0);
+                porosiaListViewDTO.setCmimiTotal(porosia.getCmimiTotal());
                 porosiaListViewDTOS.add(porosiaListViewDTO);
             }
 

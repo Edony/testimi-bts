@@ -69,7 +69,11 @@ public class ShportaProductService {
         return shportaProductViewDTOS;
     }
 
-    public Boolean shtoSasi(Long id, Integer sasia){
+    public Boolean shtoSasi(Long id, Integer s){
+        Integer sasia = s;
+        if (sasia < 0){
+            sasia = 1;
+        }
         try {
             ShportaProduct shportaProduct = shportaProductRepository.getOne(id);
             Product product = productRepository.getOne(shportaProduct.getProduct().getId());
