@@ -1,0 +1,99 @@
+<div class="page-body">
+
+  <div class="row simple-cards users-card">
+
+
+    <div class="col-md-12 col-xl-3" *ngFor="let product of products">
+      <div class="card user-card p-t-0">
+        <div class="card-header-img">
+          <img class="img-fluid img-200" [src]="product.foto" alt="card-img" *ngIf="product.foto != null && product.foto != ''">
+          <img class="img-fluid img-200" src="../../../assets/images/no-image.jpg" alt="card-img" *ngIf="product.foto == null || product.foto == ''">
+          <h4>{{product.emri}}</h4>
+          <h6>{{product.cmimi}}€</h6>
+          <p *ngIf="product.sasia > 0" class="p-0 m-0">{{product.sasia}} ne stok</p>
+          <p *ngIf="product.sasia <= 0" class="p-0 m-0" style="color: red">{{product.sasia}} ne stok</p>
+        </div>
+        <p>{{product.pershkrimi | slice:0:40}}[...]</p>
+        <div>
+<!--          <button type="button" class="btn btn-primary waves-effect waves-light m-r-15" (click)="blejProdukt.show()">Blej Tani</button>-->
+          <button *ngIf="product.eshteNeStok == false && product.sasia > 0" type="button" class="btn btn-outline-primary waves-effect waves-light m-r-15" (click)="create(product.id)"><i
+            class="icofont icofont-plus m-r-5"></i>Shto ne shporte
+          </button>
+          <button *ngIf="product.eshteNeStok == false && product.sasia <= 0" type="button" class="btn btn-danger waves-effect waves-light m-r-15" disabled>Shitur</button>
+          <button *ngIf="product.eshteNeStok == true" type="button" class="btn btn-primary waves-effect waves-light m-r-15" disabled>Aktualisht ne shporte</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <app-modal-basic #blejProdukt [dialogClass]="'modal-lg'">
+    <div class="app-modal-header">
+      <h4 class="modal-title">Blej Produktin</h4>
+      <button type="button" class="close basic-close" (click)="blejProdukt.hide()">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="app-modal-body modal-body pt-0">
+      <div class="row">
+        <div class="col-lg-4">
+          <img class="img-fluid" src="https://tiger.gjirafa.com/storage/gj50/thumb/97557/0.jpg" alt="card-img">
+        </div>
+        <div class="col-lg-8">
+          <h3>EMRI I PRODUKTIT</h3>
+          <h5>65.55€</h5>
+          <p class="p-0 m-0">Lorem ipsum dolor sit amet, consectet ur adipisicing elit, sed do eiusmod temp or incidi
+            dunt ut labore et.</p>
+          <p class="mt-2" style="color: #00ACED">15 ne stok.</p>
+          <div class="row mt-2">
+            <div class="col-sm-6 mb-3">
+              <label>Sasia</label>
+              <input type="number" min="1" class="form-control form-control-primary">
+            </div>
+          </div>
+          <h4>Total: 65.55€</h4>
+        </div>
+      </div>
+      <div class="row mt-3">
+        <div class="col-lg-12">
+          <h3>Te dhenat tuaja</h3>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-lg-6 mt-2">
+          <label>Emri</label>
+          <input type="text" class="form-control form-control-primary">
+        </div>
+        <div class="col-lg-6 mt-2">
+          <label>Mbiemri</label>
+          <input type="text" class="form-control form-control-primary">
+        </div>
+        <div class="col-lg-6 mt-2">
+          <label>Email</label>
+          <input type="email" class="form-control form-control-primary">
+        </div>
+        <div class="col-lg-6 mt-2">
+          <label>Numri Telefonit</label>
+          <input type="number" class="form-control form-control-primary">
+        </div>
+        <div class="col-lg-6 mt-2">
+          <label>Rruga</label>
+          <input type="text" class="form-control form-control-primary">
+        </div>
+        <div class="col-lg-6 mt-2">
+          <label>ZIP Kodi</label>
+          <input type="text" class="form-control form-control-primary">
+        </div>
+        <div class="col-lg-6 mt-2">
+          <label>Qyteti</label>
+          <input type="text" class="form-control form-control-primary">
+        </div>
+      </div>
+    </div>
+    <div class="app-modal-footer">
+      <button type="button" class="btn btn-default waves-effect" (click)="blejProdukt.hide()">Mbyll</button>
+      <button type="button" class="btn btn-primary waves-effect waves-light m-l-15">Blej</button>
+    </div>
+  </app-modal-basic>
+</div>
+<ng2-toasty [position]="position"></ng2-toasty>

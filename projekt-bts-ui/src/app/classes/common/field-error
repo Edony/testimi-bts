@@ -1,0 +1,22 @@
+export class FieldError {
+  codes: Array<String>;
+  arguments: Array<String>;
+  defaultMessage: String;
+  objectName: String;
+  field: String;
+  rejectedValue: String;
+  bindingFailure: String;
+  code: String;
+
+
+  constructor(codes: Array<String>, arguments: Array<String>, defaultMessage: String, objectName: String, field: String, rejectedValue: String, bindingFailure: String, code: String) {
+    this.codes = codes;
+    this.arguments = arguments;
+    this.defaultMessage = defaultMessage;
+    this.objectName = objectName;
+    this.field = field;
+    this.rejectedValue = rejectedValue;
+    this.bindingFailure = bindingFailure;
+    this.code = code;
+  }
+}
